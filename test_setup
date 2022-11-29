@@ -1,0 +1,10 @@
+#! /bin/bash
+
+file=$1
+disk_size=8G
+
+dd if=/dev/zero of="$file" bs="$disk_size" count=0 seek=1 status=none
+parted --script "$file" mklabel gpt
+parted --script "$file" mkpart foo fat32 0% 10%
+
+dd if=uefi_mbr.bin of="$file" conv=notrunc status=none
